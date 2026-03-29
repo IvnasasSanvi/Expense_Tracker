@@ -107,3 +107,18 @@ export async function loginUser(req,res) {
     }
     
 }
+
+//to get login user details
+export async function getCurrentUser(req, res) {
+    try {
+        const user =  await User.findById(req.user.id).select("name email");
+        if(!user){
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+    } catch (error) {
+        
+    }
+}
