@@ -118,7 +118,12 @@ export async function getCurrentUser(req, res) {
                 message: "User not found"
             });
         }
-    } catch (error) {
-        
+        res.json({success: true, user});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        })
     }
 }
