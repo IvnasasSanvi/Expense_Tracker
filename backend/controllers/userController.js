@@ -127,3 +127,40 @@ export async function getCurrentUser(req, res) {
         })
     }
 }
+
+// to update a user profile
+export async function updateProfile(req, res) {
+    const { name, email } = req.body;
+    if(!name || !email || !validator.isEmail(email)){
+        return res.status(400).json({
+            success: false,
+            message: "Valid email and name are required."
+        });
+    }
+
+    try {
+      const exists = await User.findOne({email, _id: {$ne: req.user.id}}); 
+      if(exists){
+        return res.status(409).json({
+            success: false,
+            message: "Email already in use."
+        });
+      } 
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        {name, email},
+        {new: true, runValidators: true, select:"name email"}
+      )
+      res.json({
+        success: true,
+        user
+      })
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        })
+    }
+}
