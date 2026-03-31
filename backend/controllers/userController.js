@@ -2,13 +2,23 @@ import User from '../models/userModel.js';
 import validator from "validator"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import dotenv from "dotenv";
-dotenv.controllersDotenv()
+
+
 
 const TOKEN_EXPIRES = '24h'
 
-const createToken = (userId) =>
-    jwt.sign({id: userId}, process.env.JWT_SECRET, {expiresIn: TOKEN_EXPIRES});
+const createToken = (userId) => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET missing");
+    }
+
+    return jwt.sign(
+        { id: userId },
+        process.env.JWT_SECRET,
+        { expiresIn: TOKEN_EXPIRES }
+    );
+};
+
 
 //Register a user
 export async function registerUser(req, res){
