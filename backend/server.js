@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 // Routes
-//app.use("/api/user", userRouter)
+app.use("/api/user", userRouter)
 
 app.get('/', (req, res) => {
     res.send('API WORKING');
