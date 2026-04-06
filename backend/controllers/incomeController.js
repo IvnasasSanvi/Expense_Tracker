@@ -133,11 +133,19 @@ export async function downloadIncomeExcel(req,res) {
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(plainData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "incomeModel");
+        XLSX.writeFile(workbook, "income_details.xlsx");
+        res.download("income_details.xlsx")
 
 
     } 
     
     catch (error) {
-        
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        })
     }    
 }
