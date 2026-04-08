@@ -17,7 +17,7 @@ connectDB();
 
 // Routes
 app.use("/api/user", userRouter)
-//app.use("/api/income", incomeRouter)
+app.use("/api/income", incomeRouter)
 
 app.get('/', (req, res) => {
     res.send('API WORKING');
