@@ -1,5 +1,5 @@
 import incomeModel from "../models/incomeModel.js";
-import XLSX from 'exceljs'
+import ExcelJS from 'exceljs'
 import getDateRange from "../utils/dateFilter.js";
 
 export async function addIncome(req, res) {
@@ -7,7 +7,7 @@ export async function addIncome(req, res) {
     const {description, amount, category, date} = req.body;
 
     try {
-        if(!description || !amount || !category || !date){
+        if(!description || amount==null || !category || !date){
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -79,7 +79,7 @@ export async function updateIncome(req,res) {
         res.json({
             success: true, 
             message: "Income updated successfully.",
-            date: updateIncome
+            data: updateIncome
         })
 
     } 
@@ -96,7 +96,10 @@ export async function updateIncome(req,res) {
 //to delete an income
 export async function deleteIncome(req, res) {
     try {
-        const income = await incomeModel.findByIdAndDelete({ _id: req.params.id });
+        const income = await incomeModel.findOneAndDelete({
+    _id: req.params.id,
+    userId: req.user._id
+});
         if(!income){
             return res.status(404).json({
                 success: false,
@@ -121,33 +124,80 @@ export async function deleteIncome(req, res) {
 
 
 // to download the data in an excel sheet
-export async function downloadIncomeExcel(req,res) {
-    const userId = req.user._id;
-    try {
-        const income = await incomeModel.find({userId}).sort({date: -1});
-        const plainData = income.map((inc)=>({
-            Description: inc.description,
-            Amount: inc.amount,
-            Category: inc.category,
-            Date: new Date(inc.date).toLocaleDateString(),
-        }));
+// export async function downloadIncomeExcel(req,res) {
+//     const userId = req.user._id;
+//     try {
+//         const income = await incomeModel.find({userId}).sort({date: -1});
+//         const plainData = income.map((inc)=>({
+//             Description: inc.description,
+//             Amount: inc.amount,
+//             Category: inc.category,
+//             Date: new Date(inc.date).toLocaleDateString(),
+//         }));
 
-        const worksheet = XLSX.utils.json_to_sheet(plainData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "incomeModel");
-        XLSX.writeFile(workbook, "income_details.xlsx");
-        res.download("income_details.xlsx")
+//         const worksheet = XLSX.utils.json_to_sheet(plainData);
+//         const workbook = XLSX.utils.book_new();
+//         XLSX.utils.book_append_sheet(workbook, worksheet, "incomeModel");
+//         XLSX.writeFile(workbook, "income_details.xlsx");
+//         res.download("income_details.xlsx")
 
 
-    } 
+//     } 
     
-    catch (error) {
+//     catch (error) {
+//         console.log(error);
+//         res.status(500).json({
+//             success: false,
+//             message: "Server Error"
+//         })
+//     }    
+// }
+
+export async function downloadIncomeExcel(req, res) {
+    const userId = req.user._id;
+
+    try {
+        const income = await incomeModel.find({ userId }).sort({ date: -1 });
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Income");
+
+        worksheet.columns = [
+            { header: "Description", key: "description", width: 20 },
+            { header: "Amount", key: "amount", width: 15 },
+            { header: "Category", key: "category", width: 15 },
+            { header: "Date", key: "date", width: 20 },
+        ];
+
+        income.forEach((inc) => {
+            worksheet.addRow({
+                description: inc.description,
+                amount: inc.amount,
+                category: inc.category,
+                date: new Date(inc.date).toLocaleDateString(),
+            });
+        });
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=income_details.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
             message: "Server Error"
-        })
-    }    
+        });
+    }
 }
 
 
