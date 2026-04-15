@@ -3,11 +3,12 @@ import ExcelJS from 'exceljs'
 import getDateRange from "../utils/dateFilter.js";
 
 export async function addIncome(req, res) {
-    const userId = req.user._id
+    const userId = req.user.id
+    console.log(userId)
     const {description, amount, category, date} = req.body;
 
     try {
-        if(!description || amount==null || !category || !date){
+        if(!description || !amount || !category || !date){
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -30,17 +31,19 @@ export async function addIncome(req, res) {
     } 
     
     catch (error) {
-        console.log(error);
+        console.log(error.message);
+
         res.status(500).json({
             success: false,
-            message: "Server Error"
+            message: "Server Error",
+            msg : error.message
         })
     }
 }
 
 //to get income(all)
 export async function getAllIncome(req,res) {
-    const userId = req.user._id
+    const userId = req.user.id
     try {
         const income = await incomeModel.find({ userId }).sort({date: -1});
         res.json(income)
@@ -59,7 +62,7 @@ export async function getAllIncome(req,res) {
 // update an income
 export async function updateIncome(req,res) {
     const {id} = req.params;
-    const userId = req.user._id;
+    const userId = req.user.id;
     const {description, amount} = req.body;
 
     try {
@@ -98,7 +101,7 @@ export async function deleteIncome(req, res) {
     try {
         const income = await incomeModel.findOneAndDelete({
     _id: req.params.id,
-    userId: req.user._id
+    userId: req.user.id
 });
         if(!income){
             return res.status(404).json({
@@ -154,7 +157,7 @@ export async function deleteIncome(req, res) {
 // }
 
 export async function downloadIncomeExcel(req, res) {
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     try {
         const income = await incomeModel.find({ userId }).sort({ date: -1 });
@@ -204,7 +207,7 @@ export async function downloadIncomeExcel(req, res) {
 // to get income overview
 export async function getIncomeOverview(req, res) {
     try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const {range = "monthly"} = req.query;
     const {start, end} = getDateRange(range);
     
