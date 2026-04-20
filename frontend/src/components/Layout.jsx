@@ -1,6 +1,7 @@
 import React from 'react'
+import { styles } from '../assets/dummyStyles'
 
-const Layout = () => {
+const Layout = ({onLayout, user}) => {
   return (
     <div>Layout</div>
   )
