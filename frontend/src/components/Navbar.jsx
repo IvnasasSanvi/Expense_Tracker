@@ -1,10 +1,20 @@
 import React from 'react'
 import { navbarStyles } from '../assets/dummyStyles'
-import img1 from '../assets'
+import img1 from '../assets/logo.png'
+import { useNavigate } from 'react-router-dom'
 
-const Navbar = () => {
+const Navbar = ({user: propUser, onLogout}) => {
+    const navigate = useNavigate();
   return (
-    <div>Navbar</div>
+    <header className={navbarStyles.header}>
+        <div className={navbarStyles.container}>
+            <div onClick={() => navigate("/")} className={navbarStyles.logoContainer}>
+                <div className={navbarStyles.logoImage}>
+                    <img src={img1} alt="logo"/>
+                </div>
+            </div>
+        </div>
+    </header>
   )
 }
 
