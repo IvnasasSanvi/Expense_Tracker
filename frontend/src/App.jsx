@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
@@ -26,14 +26,15 @@ const App = () => {
 
   const handleLogout = () => {
     clearAuth();
-    navigate("/login")
+    navigate("/login");
   };
   return (
     <>
     
     <Routes>
-      <Route element= {<Layout/>}/>
+      <Route element= {<Layout/>}>
         <Route path="/" element= {<Dashboard/>}/>
+      </Route>
     </Routes>
     
     </>
