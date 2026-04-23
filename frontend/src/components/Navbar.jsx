@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { navbarStyles } from '../assets/dummyStyles'
 import img1 from '../assets/logo.png'
-import { ChevronDown, User } from 'lucide-react';
+import { ChevronDown, LogOut, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Navbar = ({user: propUser, onLogout}) => {
     const navigate = useNavigate();
@@ -13,6 +14,22 @@ const Navbar = ({user: propUser, onLogout}) => {
         name: "",
         email: "",
     };
+
+    // to fetch the user data from server
+    useEffect(()=> {
+        const fetchUserData = async () =>{
+            try {
+                const token = localStorage.getItem("token");
+                if(!token) return;
+
+                const response = await axios.get
+            } 
+            
+            catch (error) {
+                
+            }
+        }
+    })
 
     const toggleMenu = () => setMenuOpen((prev) => !prev)
 
@@ -73,6 +90,16 @@ const Navbar = ({user: propUser, onLogout}) => {
                                 > 
                                     <User className=" w-4 h-4"></User>
                                     <span>My Profile</span>
+                                </button>
+                            </div>
+
+                            <div className={navbarStyles.menuItemBorder}>
+                                <button
+                                    onClick={handleLogout}
+                                    className={navbarStyles.logoutButton}
+                                >
+                                    <LogOut className=" w-4 h-4"/>
+                                    <span>Log Out</span>
                                 </button>
                             </div>
 
