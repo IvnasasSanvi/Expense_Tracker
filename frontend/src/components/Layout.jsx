@@ -390,8 +390,8 @@ const Layout = ({onLayout, user}) => {
             <div className={styles.cards.base}>
               <div className={styles.cards.header}>
                 <div className={styles.cards.title}>
-                  <TrendingUp className=" w-6 h-6 text-teal-500"/>
-                  Financial Overview
+                  {/* <TrendingUp className=" w-6 h-6 text-teal-500"/>
+                  Financial Overview */}
                 </div>
               </div>
             </div>
