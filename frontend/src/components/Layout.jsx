@@ -6,7 +6,7 @@ import { Activity, ArrowDown, ArrowUp, Car, ChevronDown, ChevronUp, Clock, Credi
 import axios from 'axios'
 import { Outlet } from 'react-router-dom'
 
-const API_BASE = import.meta.env.VITE_BACK_URL
+const API_BASE = "http://localhost:4000/api"
 
 const CATEGORY_ICONS = {
   Food: <Utensils className="w-4 h-4" />,
@@ -65,7 +65,7 @@ const Layout = ({onLayout, user}) => {
   const fetchTransactions = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
       const [incomeRes, expenseRes] = await Promise.all([
@@ -108,7 +108,7 @@ const Layout = ({onLayout, user}) => {
 
   const addTransaction = async (transaction) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint =
         transaction.type === "income" ? "income/add" : "expense/add";
@@ -126,7 +126,7 @@ const Layout = ({onLayout, user}) => {
 
   const editTransaction = async (id, transaction) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint =
         transaction.type === "income" ? "income/update" : "expense/update";
@@ -146,7 +146,7 @@ const Layout = ({onLayout, user}) => {
 
   const deleteTransaction = async (id, type) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const endpoint = type === "income" ? "income/delete" : "expense/delete";
       await axios.delete(`${API_BASE}/${endpoint}/${id}`, { headers });
@@ -422,7 +422,7 @@ const Layout = ({onLayout, user}) => {
 
               <div className={styles.transactions.listContainer}>
                 {displayedTransactions.map((transactions) => {
-                  const {id, type, category, description, data, amount} = transactions;
+                  const {id, type, category, description, date, amount} = transactions;
                   return (
                     <div key={id} className={styles.transactions.transactionItem}>
                       <div className="flex items-center gap-1 md:gap-4 lg:gap-3">

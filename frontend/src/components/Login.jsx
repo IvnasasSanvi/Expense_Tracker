@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { loginStyles } from '../assets/dummyStyles'
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
+const Login = ({ onLogin , API_URL = "http://localhost:4000/api"}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -19,13 +19,18 @@ const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
     const res =await axios.get(`${API_URL}/user/me`,{
         headers: {Authorization: `Bearer ${token}`},
     })
+    console.log(token)
     return res.data;
   }
 
   const persistAuth = (profile, token)=> {
     const storage = rememberMe ? localStorage : sessionStorage;
+    
     try {
-        if(token) storage.setItem("token",token);
+        if(token) {
+            storage.setItem("token",token);
+        }
+        console.log(token);
         if(profile) storage.setItem("user", JSON.stringify(profile));
     } catch (err) {
         console.error("Storage Error: ",err);
@@ -46,6 +51,7 @@ const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
         );
         const data = res.data || {};
         const token = data.token || null;
+        console.log("Data: ", token)
 
         // to derive user profile
         let profile = data.user ?? null;
@@ -206,6 +212,15 @@ const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
                     )}
                 </button>
             </form>
+
+            <div className={loginStyles.signUpContainer}>
+                <p className={loginStyles.signUpText}>
+                    Don't have an account{" "}
+                    <Link to= "/signup" className={loginStyles.signUpLink}>
+                        Create One
+                    </Link>
+                </p>
+            </div>
             </div>
         </div>
     </div>
