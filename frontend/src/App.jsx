@@ -1,16 +1,48 @@
-import React, {useState, useEffect} from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import React, {useState, useEffect, Children} from 'react'
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import axios from 'axios'
 
 const API_URL = "http://localhost:4000"
+
+//to get transaction from localstorage
+const getTransactionsFromStorage = () => {
+  const saved = localStorage.getItem("transactions");
+  return saved ? JSON.parse(saved) : [];
+};
+
+// to protect the routes
+const ProtectedRoute = ({ user, Children }) => {
+  const localToken = localStorage.getItem("token");
+  const sessionToken = sessionStorage.getItem("token");
+  const hasToken = localToken || sessionToken;
+
+  if (!user || !hasToken){
+    return <Navigate to="/login" replace />;
+  }
+
+  return Children;
+}
+
+//to scroll to top when page gets reload or new page is visited
+const ScrollToTop = () => {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname]);
+
+  return null;
+}
 
 const App = () => {
 
   const [user, setUser]= useState(null);
   const [token, setToken] = useState(null);
+  const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
   const navigate = useNavigate();
 
@@ -68,6 +100,78 @@ const App = () => {
 
   };
 
+  //to update user data both in state and storage
+  const updateUserData = (updatedUser) => {
+    setUser(updatedUser);
+
+    const localToken = localStorage.getItem("token");
+    const sessionToken = sessionStorage.getItem("token");
+
+    if(localToken){
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    } else if(sessionToken){
+      sessionToken.setItem("user", JSON.stringify(updatedUser));
+    }
+  };
+
+  //try to load user with token when mounted
+  useEffect(() => {
+    (async () => {
+      try {
+        const localUserRaw = localStorage.getItem("user");
+        const sessionUserRaw = sessionStorage.getItem("user");
+        const localToken = localStorage.getItem("token");
+        const sessionToken = localStorage.getItem("token");
+
+        const storedToken = localUserRaw ? JSON.parse(localUserRaw) : sessionUserRaw ? JSON.parse(sessionUserRaw) : null;
+
+        const storedToken = localToken || sessionToken || null;
+        const tokenFromLocal = !!localToken;
+
+        if(storedUser) {
+          setUser(storedUser);
+          setToken(storedToken);
+          setIsLoading(false);
+          return;
+        }
+
+        if(storedToken){
+          try {
+            const res = await axios.get(`${API_URL}/api/user/me`, {
+              headers: {Authorization: `Bearer ${storedToken}`}
+            });
+            const profile = res.data;
+            persistAuth(profile, storedToken, tokenFromLocal);
+          } 
+          catch (fetchErr) {
+            console.warn("Could not fetch profile with the stored token", 
+              fetchErr
+            );
+            clearAuth();
+          }
+        }
+      } 
+      catch (err) {
+        console.error("error bootstrapping auth: ", err);
+      } finally {
+        setIsLoading(false);
+        try {
+          setTransactions(getTransactionsFromStorage());
+        } catch (txErr) {
+          console.error("Error loading transactions: ", txErr);
+        }
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+    } catch (err) {
+      console.error("error saving transactions: ", err);
+    }
+  }, [transactions]);
+
   const handleLogin =(userData, remember = false, tokenFromApi =null) =>{
     persistAuth(userData, tokenFromApi, remember);
     navigate("/");
@@ -84,28 +188,75 @@ const App = () => {
   };
 
   // Protected route component
-  const ProtectedRoute = ({ children }) => {
-    if (!isInitialized) {
-      return <div>Loading...</div>;
-    }
-    if (!token) {
-      navigate("/login");
-      return null;
-    }
-    return children;
-  };
+  // const ProtectedRoute = ({ children }) => {
+  //   if (!isInitialized) {
+  //     return <div>Loading...</div>;
+  //   }
+  //   if (!token) {
+  //     navigate("/login");
+  //     return null;
+  //   }
+  //   return children;
+  // };
+
+  // transaction helpers
+  const addTransaction = (newTransaction) =>
+    setTransactions((p) => [newTransaction, ...p]);
+  const editTransaction = (id, updatedTransaction) =>
+    setTransactions((p) =>
+      p.map((t) => (t.id === id ? { ...updatedTransaction, id } : t)),
+    );
+  const deleteTransaction = (id) =>
+    setTransactions((p) => p.filter((t) => t.id !== id));
+  const refreshTransactions = () =>
+    setTransactions(getTransactionsFromStorage());
+
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
     
+    <ScrollToTop/>
+
     <Routes>
 
       <Route path= "/login" element={<Login onLogin ={handleLogin} />} />
 
       <Route path="/signup" element={<Signup onSignup={handleSignup}/>}/>
 
-      <Route element= {<ProtectedRoute><Layout user={user} onLayout={handleLogout}/></ProtectedRoute>}>
-        <Route path="/" element= {<Dashboard/>}/>
+      <Route 
+        element= {
+        <ProtectedRoute>
+          <Layout user={user} 
+          onLayout={handleLogout}
+          transactions={transactions}
+          addTransaction={addTransaction} 
+          editTransaction= {editTransaction}
+          deleteTransaction= {deleteTransaction}
+          refreshTransactions= {refreshTransactions}
+          />
+        </ProtectedRoute>}
+        >
+
+        <Route 
+          path="/" 
+          element= {<Dashboard/>} 
+          transactions={transactions}
+          addTransaction={addTransaction} 
+          editTransaction= {editTransaction}
+          deleteTransaction= {deleteTransaction}
+          refreshTransactions= {refreshTransactions}
+        />
       </Route>
     </Routes>
     
