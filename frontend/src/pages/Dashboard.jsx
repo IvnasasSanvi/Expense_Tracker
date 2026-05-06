@@ -21,6 +21,7 @@ import {
   PieChart
 } from 'lucide-react'
 import { frame } from 'framer-motion'
+import AddTransactionModal from '../components/Add'
 import FinancialCard from '../components/FinancialCard'
 import GaugeCard from '../components/GaugeCard'
 import { Cell, Legend, Pie, ResponsiveContainer, Tooltip } from 'recharts'
@@ -669,6 +670,15 @@ const Dashboard = () => {
         </div>
       </div>
 
+
+      <AddTransactionModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        newTransaction={newTransaction}
+        setNewTransaction={setNewTransaction}
+        handleAddTransaction={handleAddTransaction}
+        loading={loading}
+      />
     </div>
   )
 }

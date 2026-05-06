@@ -279,6 +279,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import axios from "axios";
+import Income from "./pages/Income";
 
 // ✅ Use env (recommended)
 const API_URL = import.meta.env.VITE_BACK_URL;
@@ -452,6 +453,19 @@ const App = () => {
             path="/"
             element={
               <Dashboard
+                transactions={transactions}
+                addTransaction={addTransaction}
+                editTransaction={editTransaction}
+                deleteTransaction={deleteTransaction}
+                refreshTransactions={refreshTransactions}
+              />
+            }
+          />
+
+          <Route
+            path="/income"
+            element={
+              <Income
                 transactions={transactions}
                 addTransaction={addTransaction}
                 editTransaction={editTransaction}
