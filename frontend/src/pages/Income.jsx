@@ -22,7 +22,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import axios from "axios";
-import { exportToExcel } from "../utils/exportUtils";
+//import { exportToExcel } from "../utils/exportUtils";
 import AddTransactionModal from "../components/Add";
 import TransactionItem from "../components/TransactionItem";
 import TimeFrameSelector from "../components/TimeFrame";
@@ -665,4 +665,4 @@ const IncomePage = () => {
   );
 };
 
-export default Income;
+export default IncomePage;
