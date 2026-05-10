@@ -7,7 +7,7 @@ import incomeRouter from './routes/incomeRoute.js';
 import expenseRouter from './routes/expenseRoute.js';
 import dashboardRouter from './routes/dashboardRoute.js';
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 // Middleware
 app.use(cors());
