@@ -26,7 +26,7 @@ import FinancialCard from '../components/FinancialCard'
 import GaugeCard from '../components/GaugeCard'
 import { Cell, Legend, Pie, ResponsiveContainer, Tooltip } from 'recharts'
 
-const API_URL = "http://localhost:4000/api"
+const API_URL = import.meta.env.VITE_BACK_URL
 
 const getAuthHeader = () =>{
   const token = 

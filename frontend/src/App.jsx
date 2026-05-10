@@ -281,16 +281,16 @@ import Signup from "./components/Signup";
 import axios from "axios";
 import Income from "./pages/Income";
 
-// ✅ Use env (recommended)
+
 const API_URL = import.meta.env.VITE_BACK_URL;
 
-// ✅ Get transactions from localStorage
+// Get transactions from localStorage
 const getTransactionsFromStorage = () => {
   const saved = localStorage.getItem("transactions");
   return saved ? JSON.parse(saved) : [];
 };
 
-// ✅ Protected Route
+// Protected Route
 const ProtectedRoute = ({ user, children }) => {
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -302,7 +302,7 @@ const ProtectedRoute = ({ user, children }) => {
   return children;
 };
 
-// ✅ Scroll to top on route change
+//  Scroll to top on route change
 const ScrollToTop = () => {
   const location = useLocation();
 
@@ -321,7 +321,7 @@ const App = () => {
 
   const navigate = useNavigate();
 
-  // ✅ Restore auth from storage
+  //  Restore auth from storage
   useEffect(() => {
     try {
       const localUser = localStorage.getItem("user");
@@ -350,7 +350,7 @@ const App = () => {
     }
   }, []);
 
-  // ✅ Persist transactions
+  //  Persist transactions
   useEffect(() => {
     try {
       localStorage.setItem("transactions", JSON.stringify(transactions));
@@ -359,7 +359,7 @@ const App = () => {
     }
   }, [transactions]);
 
-  // ✅ Save auth
+  // Save auth
   const persistAuth = (userObj, tokenStr, remember = false) => {
     try {
       if (remember) {
@@ -379,7 +379,7 @@ const App = () => {
     }
   };
 
-  // ✅ Logout
+  //  Logout
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
@@ -388,19 +388,19 @@ const App = () => {
     navigate("/login");
   };
 
-  // ✅ Login handler
+  //  Login handler
   const handleLogin = (userData, remember = false, tokenFromApi = null) => {
     persistAuth(userData, tokenFromApi, remember);
     navigate("/");
   };
 
-  // ✅ Signup handler
+  //  Signup handler
   const handleSignup = (userData, remember = false, tokenFromApi = null) => {
     persistAuth(userData, tokenFromApi, remember);
     navigate("/");
   };
 
-  // ✅ Transaction helpers
+  // Transaction helpers
   const addTransaction = (newTransaction) =>
     setTransactions((prev) => [newTransaction, ...prev]);
 
@@ -415,7 +415,7 @@ const App = () => {
   const refreshTransactions = () =>
     setTransactions(getTransactionsFromStorage());
 
-  // ✅ Loading screen
+  //  Loading screen
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

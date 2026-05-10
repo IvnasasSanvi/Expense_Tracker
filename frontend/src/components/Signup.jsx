@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
-const Signup = ({API_URL = "http://localhost:4000", onSignup}) => {
+const Signup = ({API_URL = import.meta.env.VITE_BACK_URL, onSignup}) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +17,7 @@ const Signup = ({API_URL = "http://localhost:4000", onSignup}) => {
   //to fetch profile
   const fetchProfile = async (token) => {
     if(!token) return null;
-    const res =await axios.get(`${API_URL}/api/user/me`,{
+    const res =await axios.get(`${API_URL}/user/me`,{
         headers: {Authorization: `Bearer ${token}`},
     })
     console.log(token)
