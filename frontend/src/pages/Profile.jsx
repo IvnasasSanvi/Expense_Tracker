@@ -4,7 +4,7 @@ import Modal from 'react-modal'
 import { Eye, EyeOff, Lock, User, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {toast} from 'react-toastify'
+import {toast, ToastContainer} from 'react-toastify'
 
 const BASE_URL= import.meta.env.VITE_BACK_URL
 

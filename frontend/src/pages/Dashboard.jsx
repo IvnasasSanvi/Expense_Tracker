@@ -228,7 +228,7 @@ const Dashboard = () => {
   const fetchDashboardOverview = async () => {
     try {
       setLoading(true);
-      const res= await axios.get(`${API_URL}/api/dashboard`, {
+      const res= await axios.get(`${API_URL}/dashboard/`, {
         headers: getAuthHeader(),
       });
 
@@ -327,11 +327,11 @@ const Dashboard = () => {
     try {
       setLoading(true);
       if (newTransaction.type === "income") {
-        await axios.post(`${API_URL}/api/income/add`, payload, {
+        await axios.post(`${API_URL}/income/add`, payload, {
           headers: getAuthHeader(),
         });
       } else{
-        await axios.post(`${API_URL}/api/expense/add`, payload, {
+        await axios.post(`${API_URL}/expense/add`, payload, {
           headers: getAuthHeader(),
         });
       }

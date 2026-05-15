@@ -16,7 +16,7 @@ const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
   //to fetch profile
   const fetchProfile = async (token) => {
     if(!token) return null;
-    const res =await axios.get(`${API_URL}/api/user/me`,{
+    const res =await axios.get(`${API_URL}/user/me`,{
         headers: {Authorization: `Bearer ${token}`},
     })
     console.log(token)
@@ -45,7 +45,7 @@ const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
 
     try {
         const res = await axios.post(
-            `${API_URL}/api/user/login`,
+            `${API_URL}/user/login`,
             { email, password },
             { headers: { "Content-Type": "application/json" } }
         );
