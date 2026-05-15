@@ -45,7 +45,7 @@ const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
 
     try {
         const res = await axios.post(
-            `${API_URL}/user/login`,
+            `${API_URL}/api/user/login`,
             { email, password },
             { headers: { "Content-Type": "application/json" } }
         );
