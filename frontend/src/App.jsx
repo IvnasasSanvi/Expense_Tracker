@@ -495,7 +495,7 @@ const App = () => {
             element={
               <Profile 
                 user={user}
-                //onUpdateProfile={updateUserData}
+                onUpdateProfile={updateUserData}
                 onLogout={handleLogout}
               />
               }
