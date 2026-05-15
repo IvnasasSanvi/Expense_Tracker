@@ -22,7 +22,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import axios from "axios";
-//import { exportToExcel } from "../utils/exportUtils";
+import { exportToExcel } from "../utils/exportUtils";
 import AddTransactionModal from "../components/Add";
 import TransactionItem from "../components/TransactionItem";
 import TimeFrameSelector from "../components/TimeFrame";
@@ -165,7 +165,7 @@ const FilterSection = ({ filter, setFilter, handleExport }) => (
   </div>
 );
 
-const IncomePage = () => {
+const Income = () => {
   const {
     transactions: outletTransactions = [],
     timeFrame = "monthly",
@@ -665,4 +665,4 @@ const IncomePage = () => {
   );
 };
 
-export default IncomePage;
+export default Income;

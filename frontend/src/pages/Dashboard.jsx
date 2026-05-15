@@ -17,14 +17,14 @@ import {
   ShoppingCart, 
   TrendingDown, 
   TrendingUp, 
-  Wallet, 
-  PieChart
+  Wallet
+  
 } from 'lucide-react'
 import { frame } from 'framer-motion'
 import AddTransactionModal from '../components/Add'
 import FinancialCard from '../components/FinancialCard'
 import GaugeCard from '../components/GaugeCard'
-import { Cell, Legend, Pie, ResponsiveContainer, Tooltip } from 'recharts'
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 const API_URL = import.meta.env.VITE_BACK_URL
 
