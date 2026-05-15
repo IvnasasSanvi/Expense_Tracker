@@ -173,7 +173,7 @@ const Sidebar = ({ user, isCollapsed, setIsCollapsed, onLogout }) => {
           </div>
 
           {/* Logout */}
-          <div className="p-4 border-t">
+          {/* <div className="p-4 border-t">
             <button
               onClick={onLogout}
               className="flex items-center gap-2 text-red-500 hover:text-red-600"
@@ -181,7 +181,7 @@ const Sidebar = ({ user, isCollapsed, setIsCollapsed, onLogout }) => {
               <LogOut size={18} />
               {!isCollapsed && <span>Logout</span>}
             </button>
-          </div>
+          </div> */}
 
           <div className={cn(
             sidebarStyles.footerContainer.base,
