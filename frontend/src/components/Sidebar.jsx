@@ -193,7 +193,7 @@ const Sidebar = ({ user, isCollapsed, setIsCollapsed, onLogout }) => {
                 sidebarStyles.footerLink.base,
                 isCollapsed && sidebarStyles.footerLink.collapsed,
               )} 
-              to="https://www.hexagondigitalservices.com/contact"
+              to="https://docs.google.com/forms/d/e/1FAIpQLSfPJLuScDe0Lk32pun6k11mSjlWWEu4jDYpNdgowlPXpR92EA/viewform?usp=publish-editor"
             >
               <HelpCircle size={20} className="text-gray-500"/>
               {!isCollapsed && <span>Support</span>}
