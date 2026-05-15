@@ -20,7 +20,7 @@ const Navbar = ({ user: propUser, onLogout }) => {
                 const token = localStorage.getItem("token");
                 if (!token) return;
 
-                const response = await axios.get(`${BASE_URL}/user/me`, {
+                const response = await axios.get(`${BASE_URL}/api/user/me`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 

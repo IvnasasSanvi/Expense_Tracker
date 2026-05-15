@@ -16,7 +16,7 @@ const Login = ({ onLogin , API_URL = import.meta.env.VITE_BACK_URL}) => {
   //to fetch profile
   const fetchProfile = async (token) => {
     if(!token) return null;
-    const res =await axios.get(`${API_URL}/user/me`,{
+    const res =await axios.get(`${API_URL}/api/user/me`,{
         headers: {Authorization: `Bearer ${token}`},
     })
     console.log(token)
